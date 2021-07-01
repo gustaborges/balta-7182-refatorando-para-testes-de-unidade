@@ -10,7 +10,7 @@ namespace Store.Tests.Entities
     {
         private readonly Customer _customer = new Customer(name: "John Bayne", email: "john.bayne@email.com");
         private readonly Product _product = new Product("Produto 1", 10.00m, true);
-        private readonly PromoCode _cupomDescontoValido = new PromoCode(5, DateTime.Now.AddDays(1));
+        private readonly DiscountVoucher _cupomDescontoValido = new DiscountVoucher(5, DateTime.Now.AddDays(1));
 
         [SetUp]
         public void Setup()
@@ -92,7 +92,7 @@ namespace Store.Tests.Entities
         [Test]
         public void Dado_um_cupom_de_desconto_expirado_entao_ele_nao_deve_ser_aplicado()
         {
-            var order = new Order(_customer, 0, new PromoCode(5, DateTime.Now.AddDays(-1)));
+            var order = new Order(_customer, 0, new DiscountVoucher(5, DateTime.Now.AddDays(-1)));
             order.AddItem(_product, 1);
             Assert.AreEqual(10, order.Total());
         }

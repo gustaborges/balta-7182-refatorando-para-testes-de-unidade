@@ -2,9 +2,9 @@ using System;
 
 namespace Store.Domain.Entities
 {
-    public class PromoCode : Entity
+    public class DiscountVoucher : Entity
     {
-        public PromoCode(decimal amount, DateTime expireDate)
+        public DiscountVoucher(decimal amount, DateTime expireDate)
         {
             this.Amount = amount;
             this.ExpireDate = expireDate;
