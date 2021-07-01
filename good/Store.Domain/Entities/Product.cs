@@ -1,9 +1,16 @@
+using Flunt.Validations;
+
 namespace Store.Domain.Entities
 {
-    public class Product
+    public class Product : Entity
     {
         public Product(string title, decimal price, bool active)
         {
+            AddNotifications(new Contract<Product>()
+            .IsNotEmpty(title, nameof(title), "Título inválido")
+            .IsGreaterThan(0m, price, nameof(price), "Preço inválido")
+            );
+
             Active = active;
             Price = price;
             Title = title;
