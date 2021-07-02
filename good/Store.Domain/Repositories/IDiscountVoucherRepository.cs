@@ -4,6 +4,6 @@ namespace Store.Domain.Repositories
 {
     public interface IDiscountVoucherRepository
     {
-        DiscountVoucher GetDiscountVoucher(string code);
+        DiscountVoucher Get(string code);
     }
 }
