@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
@@ -18,7 +19,8 @@ namespace Store.Tests.Handlers
         IOrderRepository orderRepository = new FakeOrderRepository();
         OrderHandler handler;
 
-        public OrderHandlerTests()
+        [SetUp]
+        public void SetUp()
         {
             handler = new OrderHandler
             (
@@ -34,24 +36,55 @@ namespace Store.Tests.Handlers
         [Category("Handlers")]
         public void Dado_um_cliente_inexistente_o_pedido_nao_deve_ser_gerado()
         {
-            // TODO: Implementar
-            Assert.IsTrue(true);
+            CreateOrderCommand command = new CreateOrderCommand
+            (
+                customer: FakeCustomerRepository.InexistentDocument,
+                zipCode: "12345678",
+                discountVoucher: null,
+                items: new List<CreateOrderItemCommand>() {
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[0], 1)
+                }
+            );
+
+            ICommandResult commandResult = handler.Handle(command);
+            Assert.False(commandResult.Success);
         }
 
         [Test]
         [Category("Handlers")]
-        public void Dado_um_cep_invalido_o_pedido_deve_ser_gerado_normalmente()
+        public void Dado_um_cep_invalido_o_pedido_nao_deve_ser_gerado()
         {
-            // TODO: Implementar
-            Assert.IsTrue(true);
+
+            CreateOrderCommand command = new CreateOrderCommand
+            (
+                customer: FakeCustomerRepository.ValidDocument,
+                zipCode: "1234",
+                discountVoucher: null,
+                items: new List<CreateOrderItemCommand>() {
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[0], 1)
+                }
+            );
+
+            ICommandResult commandResult = handler.Handle(command);
+            Assert.False(commandResult.Success);
         }
 
         [Test]
         [Category("Handlers")]
         public void Dado_um_promocode_inexistente_o_pedido_deve_ser_gerado_normalmente()
         {
-            // TODO: Implementar
-            Assert.IsTrue(true);
+            CreateOrderCommand command = new CreateOrderCommand
+            (
+                customer: FakeCustomerRepository.ValidDocument,
+                zipCode: "12345678",
+                discountVoucher: "inexistente",
+                items: new List<CreateOrderItemCommand>() {
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[0], 1)
+                }
+            );
+
+            ICommandResult commandResult = handler.Handle(command);
+            Assert.True(commandResult.Success);
         }
 
         [Test]
@@ -60,7 +93,7 @@ namespace Store.Tests.Handlers
         {
             CreateOrderCommand command = new CreateOrderCommand
             (
-                customer: "12345678910",
+                customer: FakeCustomerRepository.ValidDocument,
                 zipCode: "12345678",
                 discountVoucher: null,
                 items: new List<CreateOrderItemCommand>()
@@ -80,14 +113,14 @@ namespace Store.Tests.Handlers
                 zipCode: "12345678",
                 discountVoucher: null,
                 items: new List<CreateOrderItemCommand>() {
-                    new CreateOrderItemCommand(Guid.NewGuid(), 1),
-                    new CreateOrderItemCommand(Guid.NewGuid(), 2),
-                    new CreateOrderItemCommand(Guid.NewGuid(), 1),
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[0], 1),
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[1], 2),
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[2], 1)
                 }
             );
 
             ICommandResult commandResult = handler.Handle(command);
-            Assert.True(commandResult.Success);
+            Assert.False(commandResult.Success);
         }
 
         [Test]
@@ -97,13 +130,13 @@ namespace Store.Tests.Handlers
         {
             CreateOrderCommand command = new CreateOrderCommand
             (
-                customer: "12345678910",
+                customer: FakeCustomerRepository.ValidDocument,
                 zipCode: "12345678",
                 discountVoucher: null,
                 items: new List<CreateOrderItemCommand>() {
-                    new CreateOrderItemCommand(Guid.NewGuid(), 1),
-                    new CreateOrderItemCommand(Guid.NewGuid(), 2),
-                    new CreateOrderItemCommand(Guid.NewGuid(), 1),
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[0], 1),
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[1], 2),
+                    new CreateOrderItemCommand(FakeProductRepository.GetGuids()[2], 1)
                 }
             );
 
