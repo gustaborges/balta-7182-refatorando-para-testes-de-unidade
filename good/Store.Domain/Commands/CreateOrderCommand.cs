@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Flunt.Notifications;
 using Flunt.Validations;
@@ -32,6 +33,8 @@ namespace Store.Domain.Commands
               .Requires()
               .AreEquals(Customer.Length, 11, nameof(Customer), "Cliente inválido")
               .AreEquals(ZipCode.Length, 8, nameof(ZipCode), "CEP inválido")
+              .IsNotNull(Items, nameof(Items), "Nenhum item no pedido")
+              .IsGreaterThan(Items.Count, 0, nameof(Items), "Nenhum item no pedido")
             );
 
             foreach (var item in Items)

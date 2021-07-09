@@ -118,6 +118,8 @@ namespace Store.Tests.Entities
         public void Dado_frete_negativo_entao_o_pedido_deve_ser_invalido()
         {
             var order = new Order(_customer, -1, _cupomDescontoValido);
+            order.AddItem(_product, 1);
+            order.Validate();
             Assert.IsFalse(order.IsValid);
         }
 
@@ -125,6 +127,8 @@ namespace Store.Tests.Entities
         public void Dado_pedido_valido_e_frete_zero_entao_o_pedido_deve_ser_valido()
         {
             var order = new Order(_customer, 0, _cupomDescontoValido);
+            order.AddItem(_product, 1);
+            order.Validate();
             Assert.IsTrue(order.IsValid);
         }
 
@@ -140,6 +144,16 @@ namespace Store.Tests.Entities
         public void Dado_pedido_sem_cliente_entao_ele_deve_ser_invalido()
         {
             var order = new Order(null, 15, _cupomDescontoValido);
+            order.AddItem(_product, 1);
+            order.Validate();
+            Assert.IsFalse(order.IsValid);
+        }
+
+        [Test]
+        public void Dado_pedido_sem_itens_entao_ele_deve_ser_invalido()
+        {
+            var order = new Order(_customer, 15, _cupomDescontoValido);
+            order.Validate();
             Assert.IsFalse(order.IsValid);
         }
     }

@@ -9,11 +9,6 @@ namespace Store.Domain.Entities
     {
         public Order(Customer customer, decimal deliveryFee, DiscountVoucher promotionalCode)
         {
-            AddNotifications(new Contract<Order>()
-            .Requires()
-            .IsNotNull(customer, nameof(customer), "Cliente inválido")
-            .IsGreaterOrEqualsThan(deliveryFee, 0, nameof(deliveryFee), "Valor de frete inválido"));
-            
             Customer = customer;
             Number = Guid.NewGuid().ToString().Substring(0, 8);
             Date = DateTime.Now;
@@ -61,6 +56,21 @@ namespace Store.Domain.Entities
         public void Cancel() 
         {
             Status = EOrderStatus.Canceled;
+        }
+
+        public void Validate()
+        {
+            AddNotifications(new Contract<Order>()
+                .Requires()
+                .IsNotNull(Customer, nameof(Customer), "Cliente inválido")
+                .IsGreaterOrEqualsThan(DeliveryFee, 0, nameof(DeliveryFee), "Valor de frete inválido")
+                .IsGreaterThan(Items.Count, 0, nameof(Items), "Pedido vazio")
+            );
+
+            foreach (var item in Items)
+            {
+                AddNotifications(item.Notifications);
+            }
         }
     }
 }

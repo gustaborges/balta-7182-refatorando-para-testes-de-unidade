@@ -1,6 +1,8 @@
+using Store.Domain.Commands.Interfaces;
+
 namespace Store.Domain.Commands
 {
-    public class GenericCommandResult
+    public class GenericCommandResult : ICommandResult
     {
         public GenericCommandResult(bool success, string message, object data)
         {
@@ -9,9 +11,8 @@ namespace Store.Domain.Commands
             Data = data;
         }
 
-        public bool Success { get; set;}
+        public bool Success { get; set; }
         public string Message { get; set; }
         public object Data { get; set; }
-
     }
 }
